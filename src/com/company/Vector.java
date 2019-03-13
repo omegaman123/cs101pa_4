@@ -15,10 +15,10 @@ import java.lang.*;
 class Vector {
   // Fields
 
-    float xCoord;
-    float yCoord;
-    float magnitude;
-    float angle;
+   private float xCoord;
+   private float yCoord;
+    private float magnitude;
+     private float angle;
 
   // Constructgors
 
@@ -41,7 +41,14 @@ class Vector {
   // It is not a traditional constructor because only one function can have
   //   the signature Vector(float, float).
   public static Vector polarVector(float angle, float magnitude) {
-
+    double xComp = magnitude*Math.cos(angle);
+    double yComp = magnitude*Math.sin(angle);
+    Vector v = new Vector();
+    v.angle = angle;
+    v.magnitude = magnitude;
+    v.xCoord = (float)xComp;
+    v.yCoord = (float)yComp;
+    return v;
   }
 
 
@@ -80,20 +87,31 @@ class Vector {
    *  Returns the sum of this Vector with the given Vector.
    */
   public Vector add(Vector other) {
-
+    Vector v = new Vector();
+    v.xCoord = this.getX() + other.getX();
+    v.yCoord = this.getY() + other.getY();
+    v.angle = (float)Math.atan2(v.yCoord,v.xCoord);
+    v.magnitude = (float)Math.sqrt((Math.pow(v.xCoord,2) + Math.pow(v.yCoord,2)));
+    return v;
   }
 
   /** subtract
    *  Returns the difference between this Vector and the given Vector.
    */
   public Vector subtract(Vector other) {
-
+      Vector v = new Vector();
+      v.xCoord = this.getX() - other.getX();
+      v.yCoord = this.getY() - other.getY();
+      v.angle = (float)Math.atan2(v.yCoord,v.xCoord);
+      v.magnitude = (float)Math.sqrt((Math.pow(v.xCoord,2) + Math.pow(v.yCoord,2)));
+      return v;
   }
 
   /** dotProduct
    *  Returns the dot product of this Vector and the given Vector.
    */
   public float dotProduct(Vector other) {
+    return ((this.xCoord * other.xCoord) + (this.yCoord * other.yCoord));
 
   }
 
@@ -112,12 +130,32 @@ class Vector {
    *    angle with magnitude 1.
    */
   public Vector normalize() {
-
+    Vector v = new Vector();
+    v.xCoord = this.xCoord/this.magnitude;
+    v.yCoord = this.yCoord/this.magnitude;
+    v.magnitude = 1;
+    v.angle = this.angle;
+    return v;
   }
-
 
 
   // Manipulation functions
   // None.  Vectors are immutable.
+
+    void print(){
+        System.out.printf("(%f, %f) magnitude: %f; angle: %f\n",
+                this.xCoord,this.yCoord,this.magnitude,this.angle);
+    }
+
+    public float scalarProject(Vector that){
+      return this.dotProduct(that)/this.magnitude;
+
+
+    }
+    public Vector vectorProject(Vector that){
+      double scalar = this.dotProduct(that)/Math.pow(this.magnitude,2);
+      Vector v = this.scalarMultiply((float)scalar);
+      return v;
+    }
 
 }
